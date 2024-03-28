@@ -1,4 +1,4 @@
-ED Model Copyright (C) 2023 Riccardo Simionato, University of Oslo
+Copyright (C) 2023 Riccardo Simionato, University of Oslo
 Inquiries: riccardo.simionato.vib@gmail.com.com
 
 This code is free software: you can redistribute it and/or modify it under the terms
@@ -15,4 +15,4 @@ If not, see <http://www.gnu.org/licenses/>.
 If you use this code or any part of it in any program or publication, please acknowledge
 its authors by adding a reference to this publication:
 
-R. Simionato, 2023, "Fully Conditioned Black Box Model for Compression" in proceedings of the 23th Digital Audio Effect Conference, Copenaghen, Denmark.
+Simionato, Riccardo, Stefano Fasciani, and Sverre Holm. "Physics-informed differentiable method for piano modeling." Frontiers in Signal Processing 3 (2024): 1276748.
