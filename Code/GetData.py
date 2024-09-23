@@ -26,29 +26,42 @@ import tensorflow as tf
 from UtilsForTrainings import get_indexed_shuffled
 
 def get_data_single(data_dir, step, seed=422):
-    np.random.seed(seed)
-    random.seed(seed)
-    os.environ['PYTHONHASHSEED'] = str(seed)
+
+    """
+    get data for scenario with unseen keys 
+          :param data_dir: path to the data folder
+          :param step: number of timesteps to generate per iteration
+          :param seed: seed for the shuffle
+    """
+
+    
+    # set all the seed in case reproducibility is desired
+    #np.random.seed(seed)
+    #random.seed(seed)
+    #os.environ['PYTHONHASHSEED'] = str(seed)
 
     data = open(os.path.normpath('/'.join([data_dir, 'DatasetSingleNote_NF_fixed.pickle'])), 'rb')
     Z = pickle.load(data)
     res = 240//step
 
+    # building the frequency and velocity vectors according on number of samples need to be generated at the time
     f = np.repeat(Z[0], 2*res).reshape(167, -1)[:, :250*res]
     v = np.repeat((Z[1]/127), 2*res).reshape(167, -1)[:, :250*res]
 
+    # create indices
     ind = np.zeros((v.shape[0], v.shape[1]))
     for j in range(v.shape[0]):
         for i in range(v.shape[1]):
             #if v[j, i] != 0:
             ind[j, i] = i
 
-    y = Z[2] #harm
+    y = Z[2]
     f0 = np.array(Z[4], dtype=np.float32)
     f0 = (np.repeat(f0, 250).reshape(167, 250))
     f0 = np.repeat(f0, res).reshape(167, -1)
     del Z
 
+    # rms envelope for the rms loss
     amps = []
     for j in range(y.shape[0]):
         _amp = []
@@ -57,7 +70,7 @@ def get_data_single(data_dir, step, seed=422):
         amps.append(_amp)
     amps = np.array(amps)[:, :240*res]
 
-
+    # excluding the key
     f_t = f[99:105]
     v_t = v[99:105]
     ind_t = ind[99:105]
@@ -72,6 +85,7 @@ def get_data_single(data_dir, step, seed=422):
     f0 = np.concatenate((f0[0:99], f0[105:]))
     amps = np.concatenate((amps[0:99], amps[105:]))
 
+    # shuffle the data
     indxs = get_indexed_shuffled(ind)
     for indx_batch in indxs:
         f = f[indx_batch]
@@ -125,29 +139,41 @@ def get_data_single(data_dir, step, seed=422):
 
 
 def get_data_single_2(data_dir, step, seed=422):
-    np.random.seed(seed)
-    random.seed(seed)
-    os.environ['PYTHONHASHSEED'] = str(seed)
+    
+    """
+    get data for scenario with unseen velocity 
+          :param data_dir: path to the data folder
+          :param step: number of timesteps to generate per iteration
+          :param seed: seed for the shuffle
+    """
+
+    # set all the seed in case reproducibility is desired
+    #np.random.seed(seed)
+    #random.seed(seed)
+    #os.environ['PYTHONHASHSEED'] = str(seed)
 
     data = open(os.path.normpath('/'.join([data_dir, 'DatasetSingleNote_NF_fixed.pickle'])), 'rb')
     Z = pickle.load(data)
     res = 240//step
 
+    # building the frequency and velocity vectors according on number of samples need to be generated at the time
     f = np.repeat(Z[0], 2*res).reshape(167, -1)[:, :250*res]
     v = np.repeat((Z[1]/127), 2*res).reshape(167, -1)[:, :250*res]
 
+     # create indices
     ind = np.zeros((v.shape[0], v.shape[1]))
     for j in range(v.shape[0]):
         for i in range(v.shape[1]):
             #if v[j, i] != 0:
             ind[j, i] = i
 
-    y = Z[2] #harm
+    y = Z[2]
     f0 = np.array(Z[4], dtype=np.float32)
     f0 = (np.repeat(f0, 250).reshape(167, 250))
     f0 = np.repeat(f0, res).reshape(167, -1)
     del Z
 
+    # rms envelope for the rms loss
     amps = []
     for j in range(y.shape[0]):
         _amp = []
@@ -156,6 +182,7 @@ def get_data_single_2(data_dir, step, seed=422):
         amps.append(_amp)
     amps = np.array(amps)[:, :240*res]
 
+    # excluding the velocity
     f_t = f[3::7]
     v_t = v[3::7]
     ind_t = ind[3::7]
@@ -178,6 +205,7 @@ def get_data_single_2(data_dir, step, seed=422):
         f0_ = np.concatenate((f0_, f0[i + 4:i + 10]))
         amps_ = np.concatenate((amps_, amps[i + 4:i + 10]))
 
+    # shuffle the data
     indxs = get_indexed_shuffled(ind_)
     for indx_batch in indxs:
         f = f_[indx_batch]
