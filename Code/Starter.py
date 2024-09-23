@@ -18,22 +18,28 @@
 # Simionato, Riccardo, Stefano Fasciani, and Sverre Holm. "Physics-informed differentiable method for piano modeling." Frontiers in Signal Processing 3 (2024): 1276748.
 
 
-from Training import trainED
+from Training import train
 
-DATA_DIR = '../../Files' #### Dataset folder
-MODEL_SAVE_DIR = '../../TrainedModels' #### Models folder
-MODEL_NAME = '240_model_2_relu' #### Model name
+"""
+main script
 
-INFERENCE = True#False
-EPOCHS = 10
-PHASE = 'B'
-HARMONICS = 24
-STEPS = 24
-LR = 1e-6
-SCENARIO = '2'
+"""
+
+DATA_DIR = '../../Files' # Dataset folder
+MODEL_SAVE_DIR = '../../TrainedModels' # Models folder
+MODEL_NAME = '' # Model name
+
+INFERENCE = True # if inference only
+EPOCHS = 100 # number of epochs
+
+HARMONICS = 24 # number of partials to compute
+STEPS = 24 # number of timestep to compute per itetation
+LR = 1e-6 # initial leanring rate
+
+SCENARIO = '2' # which scenario
 
 
-trainED(data_dir=DATA_DIR,
+train(data_dir=DATA_DIR,
         model_save_dir=MODEL_SAVE_DIR,
         save_folder=MODEL_NAME,
         learning_rate=LR,
@@ -41,5 +47,16 @@ trainED(data_dir=DATA_DIR,
         steps=STEPS,
         harmonics=HARMONICS,
         phase='B',
+        scenario=SCENARIO,
+        inference=INFERENCE)
+
+train(data_dir=DATA_DIR,
+        model_save_dir=MODEL_SAVE_DIR,
+        save_folder=MODEL_NAME,
+        learning_rate=LR,
+        epochs=EPOCHS,
+        steps=STEPS,
+        harmonics=HARMONICS,
+        phase='A',
         scenario=SCENARIO,
         inference=INFERENCE)
