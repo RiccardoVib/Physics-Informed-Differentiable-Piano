@@ -26,6 +26,7 @@ from scipy import signal
 
 
 class centLoss(tf.keras.losses.Loss):
+    """ cent loss """
     def __init__(self, delta=0., name="Cent", **kwargs):
         super().__init__(name=name, **kwargs)
         self.delta = delta
@@ -44,6 +45,7 @@ class centLoss(tf.keras.losses.Loss):
 
 
 class STFT_loss(tf.keras.losses.Loss):
+    """ multi-STFT loss """
     def __init__(self, m=[32, 64, 128, 256, 512, 1024], name="STFT", **kwargs):
         super().__init__(name=name, **kwargs)
         self.m = m
@@ -73,6 +75,8 @@ class STFT_loss(tf.keras.losses.Loss):
         return {**base_config, **config}
 
 class STFT_and_imag_loss(tf.keras.losses.Loss):
+    """ multi-STFT loss + image loss """
+
     def __init__(self, m=[32, 64, 128, 256, 512, 1024], name="STFT_loss", **kwargs):
         super().__init__(name=name, **kwargs)
         self.m = m
