@@ -30,37 +30,15 @@ from scipy import fft, signal
 from Plotting import plotting
 
 
-def get_batches(x, b_size=1, shuffle=True, seed=99):
+def get_indexed_shuffled(x, seed=99):
     """
-    shuffle and get the batches
+    return shuffled indeces
       :param x: input vecotr
       :param b_size: batch size [int]
       :param shuffle: if shuffle the indeces [int]
       :param seed: seed for the shuffling [int]
 
     """
-    np.random.seed(seed)
-    indxs = np.arange(tf.shape(x)[0])
-    if shuffle:
-        np.random.shuffle(indxs)
-
-    def divide_chunks(l, n):
-        # looping until length l
-        for i in range(0, len(l), n):
-            yield l[i:i + n]
-
-    x_b, y_b, z_b = [], [], []
-    x1_b = []
-    indxs = divide_chunks(indxs, b_size)
-
-    for indx_batch in indxs:
-      
-        x_b.append(x[indx_batch])
-
-    return x_b
-
-def get_indexed_shuffled(x, seed=99):
-   
     np.random.seed(seed)
     indxs = np.arange(tf.shape(x)[0])
     np.random.shuffle(indxs)
@@ -71,8 +49,6 @@ def get_indexed_shuffled(x, seed=99):
             yield l[i:i + n]
 
     indxs = divide_chunks(indxs, tf.shape(x)[0])
-
-
     return indxs
 
 def writeResults(results, units, epochs, b_size, learning_rate, model_save_dir,
