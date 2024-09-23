@@ -31,6 +31,14 @@ from Plotting import plotting
 
 
 def get_batches(x, b_size=1, shuffle=True, seed=99):
+    """
+    shuffle and get the batches
+      :param x: input vecotr
+      :param b_size: batch size [int]
+      :param shuffle: if shuffle the indeces [int]
+      :param seed: seed for the shuffling [int]
+
+    """
     np.random.seed(seed)
     indxs = np.arange(tf.shape(x)[0])
     if shuffle:
@@ -46,13 +54,13 @@ def get_batches(x, b_size=1, shuffle=True, seed=99):
     indxs = divide_chunks(indxs, b_size)
 
     for indx_batch in indxs:
-        # if len(indx_batch) != b_size:
-        #     continue
+      
         x_b.append(x[indx_batch])
 
     return x_b
 
 def get_indexed_shuffled(x, seed=99):
+   
     np.random.seed(seed)
     indxs = np.arange(tf.shape(x)[0])
     np.random.shuffle(indxs)
@@ -67,16 +75,29 @@ def get_indexed_shuffled(x, seed=99):
 
     return indxs
 
-def writeResults(test_loss, results, b_size, learning_rate, model_save_dir, save_folder,
+def writeResults(results, units, epochs, b_size, learning_rate, model_save_dir,
+                 save_folder,
                  index):
+    """
+    write to a text the result and parameters of the training
+      :param results: the results from the fit function [dictionary]
+      :param units: the number of model's units [int]
+      :param epochs: the number of epochs [int]
+      :param b_size: the batch size [int]
+      :param model_save_dir: the director where the models are saved [string]
+      :param save_folder: the director where the model is saved [string]
+      :param index: index for naming the file [string]
+
+    """
     results = {
-        'Test_Loss': test_loss,
         'Min_val_loss': np.min(results.history['val_loss']),
         'Min_train_loss': np.min(results.history['loss']),
         'b_size': b_size,
         'learning_rate': learning_rate,
         # 'Train_loss': results.history['loss'],
-        'Val_loss': results.history['val_loss']
+        'Val_loss': results.history['val_loss'],
+        'units': units,
+        'epochs': epochs
     }
     with open(os.path.normpath('/'.join([model_save_dir, save_folder, 'results_' + str(index) + '.txt'])), 'w') as f:
         for key, value in results.items():
@@ -86,84 +107,39 @@ def writeResults(test_loss, results, b_size, learning_rate, model_save_dir, save
                          'wb'))
 
 
-def plotResult(predictions, y, model_save_dir, save_folder, step):
-    
-    if step==24:
-        step=step*10
-        
-    l = step * 240
-    fs = 24000
-    N_stft = 2048
-    N_fft = fs*2
-
-    for i in range(6):
-        tar = y[i * l: (i + 1) * l]
-        pred = predictions[i * l: (i + 1) * l]
-
-        fig, ax = plt.subplots(nrows=1, ncols=1)
-        # ax.plot(predictions, label='pred')
-        # ax.plot(x, label='inp')
-        # ax.plot(y, label='tar')
-        display.waveshow(tar, sr=fs, ax=ax, label='Target', alpha=0.9)
-        display.waveshow(pred, sr=fs, ax=ax, label='Prediction', alpha=0.7)
-        # ax.label_outer()
-        ax.legend(loc='upper right')
-        fig.savefig(model_save_dir + '/' +save_folder + '/' + str(i) + 'plot')
-        plt.close('all')
-        
-        
-        #FFT
-        FFT_t = np.abs(fft.fftshift(fft.fft(tar, n=N_fft))[N_fft // 2:])
-        FFT_p = np.abs(fft.fftshift(fft.fft(pred, n=N_fft))[N_fft // 2:])
-        freqs = fft.fftshift(fft.fftfreq(N_fft) * fs)
-        freqs = freqs[N_fft // 2:]
-
-        fig, ax = plt.subplots(1, 1)
-        ax.semilogx(freqs, 20 * np.log10(np.abs(FFT_t)), label='Target',)
-        ax.semilogx(freqs, 20 * np.log10(np.abs(FFT_p)), label='Prediction')
-        ax.set_xlabel('Frequency')
-        ax.set_ylabel('Magnitude (dB)')
-        ax.axis(xmin=20, xmax=22050)
-
-        ax.legend(loc='upper right')
-        fig.savefig(model_save_dir  + '/' + save_folder + '/' + str(i) + 'FFT.pdf', format='pdf')
-        plt.close('all')
-
-        #STFT
-        D = librosa.stft(tar, n_fft=N_stft)  # STFT of y
-        S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
-        fig, ax = plt.subplots(nrows=2, ncols=1)
-        #ax[0].pcolormesh(t, f, np.abs(Zxx), vmin=np.min(np.abs(Zxx)), vmax=np.max(np.abs(Zxx)), shading='gouraud')
-        librosa.display.specshow(S_db, sr=fs, y_axis='linear', x_axis='time', ax=ax[0])
-        ax[0].set_title('STFT Magnitude (Top: target, Bottom: prediction)')
-        ax[0].set_ylabel('Frequency [Hz]')
-        ax[0].set_xlabel('Time [sec]')
-        ax[0].label_outer()
-
-        #f, t, Zxx = signal.stft(_p, fs, nperseg=1000)
-        D = librosa.stft(pred, n_fft=N_stft)  # STFT of y
-        S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
-        librosa.display.specshow(S_db, sr=fs, y_axis='linear', x_axis='time', ax=ax[1])
-        #ax[1].pcolormesh(t, f, np.abs(Zxx), vmin=np.min(np.abs(Zxx)), vmax=np.max(np.abs(Zxx)), shading='gouraud')
-        ax[1].set_ylabel('Frequency [Hz]')
-        ax[1].set_xlabel('Time [sec]')
-        fig.savefig(model_save_dir  + '/' + save_folder + '/' + str(i) + 'STFT.pdf', format='pdf')
-        plt.close('all')
-
-
 def plotTraining(loss_training, loss_val, model_save_dir, save_folder, name):
+    """
+    Plot the training against the validation losses
+      :param loss_training: vector with training losses [array of floats]
+      :param loss_val: vector with validation losses [array of floats]
+      :param model_save_dir: the director where the models are saved [string]
+      :param save_folder: the director where the model is saved [string]
+      :param fs: the sampling rate [int]
+      :param filename: the name of the file [string]
+    """
     fig, ax = plt.subplots(nrows=1, ncols=1)
     ax.plot(np.array(loss_training), label='train'),
     ax.plot(np.array(loss_val), label='validation')
-    plt.ylabel('mse')
+    plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.title('train vs. validation accuracy')
-    plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), fancybox=True, shadow=False, ncol=2)
+    plt.legend(loc='upper center')  # , bbox_to_anchor=(0.5, -0.15), fancybox=True, shadow=False, ncol=2)
     fig.savefig(model_save_dir + '/' + save_folder + '/' + name + 'loss.png')
     plt.close('all')
 
 
+
 def predictWaves(predictions, y_test, model_save_dir, save_folder, fs, step, scenario):
+    """
+    Render the prediction, target and input as wav audio file
+      :param predictions: the model's prediction  [array of floats]
+      :param y_test: the target [array of floats]
+      :param model_save_dir: the director where the models are saved [string]
+      :param save_folder: the director where the model is saved [string]
+      :param fs: the sampling rate [int]
+      :param step: number of steps per iterations [int]
+      :param scenario: the name of the file [string]
+    """
     pred_name = '_pred.wav'
     tar_name = '_tar.wav'
 
@@ -176,28 +152,30 @@ def predictWaves(predictions, y_test, model_save_dir, save_folder, fs, step, sce
     wavfile.write(pred_dir, fs, predictions.reshape(-1))
     wavfile.write(tar_dir, fs, y_test.reshape(-1))
 
-    #plotResult(predictions.reshape(-1), y_test.reshape(-1), model_save_dir, save_folder, step)
-
     plotting(predictions.reshape(-1), y_test.reshape(-1), model_save_dir, save_folder, step, scenario)
 
 
-def checkpoints(model_save_dir, save_folder, name):
-    ckpt_path = os.path.normpath(os.path.join(model_save_dir, save_folder, name, 'Checkpoints', 'best', 'best.ckpt'))
-    ckpt_path_latest = os.path.normpath(
-        os.path.join(model_save_dir, save_folder, name, 'Checkpoints', 'latest', 'latest.ckpt'))
-    ckpt_dir = os.path.normpath(os.path.join(model_save_dir, save_folder, name, 'Checkpoints', 'best'))
-    ckpt_dir_latest = os.path.normpath(os.path.join(model_save_dir, save_folder, name, 'Checkpoints', 'latest'))
+def checkpoints(model_save_dir, save_folder):
+    """
+    Define the path to the checkpoints saving the last and best epoch's weights
+      :param model_save_dir: the director where the models are saved [string]
+      :param save_folder: the director where the model is saved [string]
+    """
+    ckpt_path = os.path.normpath(
+        os.path.join(model_save_dir, save_folder, 'Checkpoints', 'best', 'best.ckpt'))
+    ckpt_path_latest = os.path.normpath(os.path.join(model_save_dir, save_folder, 'Checkpoints', 'latest', 'latest.ckpt'))
+    ckpt_dir = os.path.normpath(os.path.join(model_save_dir, save_folder, 'Checkpoints', 'best'))
+    ckpt_dir_latest = os.path.normpath(os.path.join(model_save_dir, save_folder, 'Checkpoints', 'latest'))
 
     if not os.path.exists(os.path.dirname(ckpt_dir)):
         os.makedirs(os.path.dirname(ckpt_dir))
     if not os.path.exists(os.path.dirname(ckpt_dir_latest)):
-        os.makedirs(os.path.dirname(ckpt_dir_latest))
+       os.makedirs(os.path.dirname(ckpt_dir_latest))
 
     ckpt_callback = tf.keras.callbacks.ModelCheckpoint(filepath=ckpt_path, monitor='val_loss', mode='min',
-                                                       save_best_only=True, save_weights_only=True, verbose=1)
-    ckpt_callback_latest = tf.keras.callbacks.ModelCheckpoint(filepath=ckpt_path_latest, monitor='val_loss',
-                                                              mode='min',
-                                                              save_best_only=False, save_weights_only=True,
-                                                              verbose=1)
+                                                       save_best_only=True, save_weights_only=True, verbose=1,
+                                                       save_best_value=True)
+
+    ckpt_callback_latest = tf.keras.callbacks.ModelCheckpoint(filepath=ckpt_path_latest, monitor='val_loss', mode='min', save_best_only=False, save_weights_only=True, verbose=1)
 
     return ckpt_callback, ckpt_callback_latest, ckpt_dir, ckpt_dir_latest
