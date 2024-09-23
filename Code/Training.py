@@ -88,7 +88,7 @@ def train(data_dir, epochs, **kwargs):
         train_amps = True
 
     # create the model
-    model = create_model_NF(poly=1, num_steps=steps, harmonics=harmonics, train_B=train_B, train_amps=train_amps)
+    model = create_model_NF(num_steps=steps, harmonics=harmonics, train_B=train_B, train_amps=train_amps)
     
     # define the losses and their weights
     lossesName = ["tf.__operators__.getitem_3", "tf.__operators__.getitem_4", "tf.math.abs_2"]
@@ -105,7 +105,7 @@ def train(data_dir, epochs, **kwargs):
     # define callbacks: where to store the weights
     callbacks = []
     scheduler = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.75, patience=2)
-    ckpt_callback, ckpt_callback_latest, ckpt_dir, ckpt_dir_latest = checkpoints(model_save_dir, save_folder, '')
+    ckpt_callback, ckpt_callback_latest, ckpt_dir, ckpt_dir_latest = checkpoints(model_save_dir, save_folder)
     callbacks += [ckpt_callback, ckpt_callback_latest, scheduler]
 
     if scenario == '1': # unseen key

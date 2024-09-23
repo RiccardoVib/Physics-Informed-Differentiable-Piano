@@ -19,15 +19,9 @@
 
 
 import numpy as np
-import os
-import tensorflow as tf
 import matplotlib.pyplot as plt
-import pickle
-from librosa import display
-from scipy.io import wavfile
 import librosa.display
 from scipy import fft
-import glob
 
 def plotting(p, y, model_save_dir, save_folder, step, scenario):
     """

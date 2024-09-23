@@ -19,10 +19,7 @@
 
 
 import tensorflow as tf
-import numpy as np
-from statistics import mean
 from tensorflow.keras import backend as K
-from scipy import signal
 
 
 class centLoss(tf.keras.losses.Loss):

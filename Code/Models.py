@@ -24,12 +24,11 @@ from tensorflow.keras.models import Model
 import math as m
 import numpy as np
 
-def create_model_NF(num_steps=240, harmonics=32, units=64, train_B=True, train_amps=True, batch_size=1):
+def create_model_NF(num_steps=240, harmonics=32, train_B=True, train_amps=True, batch_size=1):
     """
     piano model
           :param num_steps: number of steps to generate per iteration
           :param harmonics: number of partials to generate
-          :param units: number of units
           :param train_B: if training layer computing B
           :param train_amps: if training layer computing amplitudes' partials
           :param batch_size: the batch size
@@ -72,7 +71,7 @@ def create_model_NF(num_steps=240, harmonics=32, units=64, train_B=True, train_a
     # generating sine waves according to partials frequencies
     f = tf.divide(freqs_inputs, Fs, name='divide')  # Bx1xH
     x = tf.multiply(twopi, f, name='mul')  # Bx1xH
-    t = tf.ones((1, D, num_steps, harmonics))  # Bx1xTxH
+    t = tf.ones((1, 1, num_steps, harmonics))  # Bx1xTxH
     t = tf.constant(t * np.arange(num_steps).reshape(1, 1, num_steps, 1), dtype=type)
 
     k = tf.expand_dims(index_inputs, axis=-1)
@@ -113,7 +112,7 @@ def create_model_NF(num_steps=240, harmonics=32, units=64, train_B=True, train_a
 
     # compute the beatings
     freqs_beatings = tf.add(freq_inputs, beatings)
-    freqs_beatings = Multiply()([final_n_c, freqs_beatings])
+    freqs_beatings = Multiply()([final_n, freqs_beatings])
     f_b = tf.divide(freqs_beatings, Fs, name='divide')  # BxDxH
     x_b = tf.multiply(twopi, f_b, name='mul')  # BxDxH
     x_b = tf.expand_dims(x_b, axis=2)  # BxDx1xH

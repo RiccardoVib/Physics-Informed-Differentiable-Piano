@@ -23,10 +23,7 @@ import os
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import pickle
-from librosa import display
 from scipy.io import wavfile
-import librosa.display
-from scipy import fft, signal
 from Plotting import plotting
 
 
@@ -99,7 +96,7 @@ def plotTraining(loss_training, loss_val, model_save_dir, save_folder, name):
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.title('train vs. validation accuracy')
-    plt.legend(loc='upper center')  # , bbox_to_anchor=(0.5, -0.15), fancybox=True, shadow=False, ncol=2)
+    plt.legend(loc='upper center')
     fig.savefig(model_save_dir + '/' + save_folder + '/' + name + 'loss.png')
     plt.close('all')
 
