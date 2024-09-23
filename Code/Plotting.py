@@ -30,7 +30,16 @@ from scipy import fft
 import glob
 
 def plotting(p, y, model_save_dir, save_folder, step, scenario):
-
+    """
+    Plot the rendered results
+      :param p: the model's prediction  [array of floats]
+      :param y: the target [array of floats]
+      :param model_save_dir: the director where the models are saved [string]
+      :param save_folder: the director where the model is saved [string]
+      :param step: the number of steps per iteration [int]
+      :param scenario: the name of the file [string]
+    """
+    
     dir = model_save_dir + '/' + save_folder + '/'
 
     l = 57600
