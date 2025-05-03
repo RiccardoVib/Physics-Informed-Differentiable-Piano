@@ -26,7 +26,6 @@ from Models import create_model_NF
 from UtilsForTrainings import plotTraining, writeResults, checkpoints, predictWaves
 import pickle
 import random
-import numpy as np
 
 
 def train(data_dir, epochs, **kwargs):
@@ -171,9 +170,8 @@ def train(data_dir, epochs, **kwargs):
     # reset the states before predicting
     model.reset_states()
     predictions = model.predict([f_test, v_test, ind_test], batch_size=1, verbose=0)
-    predictions = predictions[0]
-    
+
     # plot and render the output audio file, together with the input and target
-    predictWaves(predictions, y_test, model_save_dir, save_folder, 24000, steps, scenario)
+    predictWaves(predictions[0], y_test, model_save_dir, save_folder, 24000, steps, scenario)
 
     return 42
