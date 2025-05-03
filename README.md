@@ -32,7 +32,7 @@ Ensure you have loaded the dataset into the chosen datasets folder
 Available options: 
 * --model_save_dir - Folder directory in which to store the trained models [str] (default ="./models")
 * --data_dir - Folder directory in which the datasets are stored [str] (default="./datasets")
-* --datasets - The names of the datasets to use. [ [str] ] (default=[" "] )
+* --datasets - The names of the datasets to use. [ [str] ] (default=" " )
 * --epochs - Number of training epochs. [int] (defaut=60)
 * --batch_size - The size of each batch [int] (default=8)
 * --steps - Number of steps to generate [int] (default=240)
@@ -45,7 +45,7 @@ Example training case:
 ```
 cd ./Code/
 
-python starter.py --datasets TapePreamp --epochs 500 
+python starter.py --datasets 'pianoUpright' --steps 240 --harmonics 24 --scenario '1' --epochs 500 
 ```
 
 To only run inference on an existing pre-trained model, use the "only_inference". In this case, ensure you have the existing model and dataset (to use for inference) both in their respective directories with corresponding names.
@@ -53,5 +53,5 @@ To only run inference on an existing pre-trained model, use the "only_inference"
 Example inference case:
 ```
 cd ./Code/
-python starter.py --datasets TapePreamp --only_inference True
+python starter.py --datasets 'pianoUpright' --steps 240 --harmonics 24 --scenario '1' --only_inference True
 ```
