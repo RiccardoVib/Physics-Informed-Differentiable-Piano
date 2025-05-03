@@ -32,7 +32,7 @@ Ensure you have loaded the dataset into the chosen datasets folder
 Available options: 
 * --model_save_dir - Folder directory in which to store the trained models [str] (default ="./models")
 * --data_dir - Folder directory in which the datasets are stored [str] (default="./datasets")
-* --datasets - The names of the datasets to use. [ [str] ] (default=" " )
+* --datasets - The names of the datasets to use. [ [str] ] (default=" ")
 * --epochs - Number of training epochs. [int] (defaut=60)
 * --batch_size - The size of each batch [int] (default=8)
 * --steps - Number of steps to generate [int] (default=240)
