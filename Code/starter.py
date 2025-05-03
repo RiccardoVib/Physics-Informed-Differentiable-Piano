@@ -59,7 +59,7 @@ def start_train(args):
                 harmonics=args.harmonics,
                 phase='B',
                 scenario=args.scenario,
-                inference=args.only_inference)
+                inference=False)
 
         train(data_dir=args.data_dir,
               model_save_dir=args.model_save_dir,
@@ -70,7 +70,7 @@ def start_train(args):
               harmonics=args.harmonics,
               phase='A',
               scenario=args.scenario,
-              inference=args.only_inference)
+              inference=False)
 
 def main():
     args = parse_args()
