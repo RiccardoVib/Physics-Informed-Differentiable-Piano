@@ -7,7 +7,7 @@ main script
 
 """
 def parse_args():
-    parser = argparse.ArgumentParser(description='Trains an the piano model. Can also be used to run pure inference.')
+    parser = argparse.ArgumentParser(description='Trains the harmonic piano model. Can also be used to run pure inference.')
 
     parser.add_argument('--model_save_dir', default='./models', type=str, nargs='?', help='Folder directory in which to store the trained models.')
 
