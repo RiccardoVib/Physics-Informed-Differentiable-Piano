@@ -9,7 +9,7 @@ Visit our [companion page with audio examples](https://riccardovib.github.io/Phy
 ### Folder Structure
 
 ```
-./src
+./
 ├── AudioExamples
 ├── Code
 └── Weights
