@@ -1,4 +1,4 @@
-# Copyright (C) 2023 Riccardo Simionato, University of Oslo
+# Copyright (C) 2024 Riccardo Simionato, University of Oslo
 # Inquiries: riccardo.simionato.vib@gmail.com.com
 #
 # This code is free software: you can redistribute it and/or modify it under the terms

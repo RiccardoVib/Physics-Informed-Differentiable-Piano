@@ -6,6 +6,16 @@ This repository contains all the necessary utilities to use our architecture. Fi
 
 Visit our [companion page with audio examples](https://riccardovib.github.io/Physics-Informed-Differentiable-Piano_pages/)
 
+### Folder Structure
+
+```
+./src
+├── AudioExamples
+├── Code
+└── Weights
+    ├── Scenario A
+    └── Scenario B
+```
 
 ### Contents
 
@@ -54,4 +64,21 @@ Example inference case:
 ```
 cd ./Code/
 python starter.py --datasets 'pianoUpright' --steps 240 --harmonics 24 --scenario '1' --only_inference True
+```
+
+# Bibtex
+
+If you use the code included in this repository or any part of it, please acknowledge 
+its authors by adding a reference to these publications:
+
+```
+@article{simionato2024physics,
+  title={Physics-informed differentiable method for piano modeling},
+  author={Simionato, R. and Fasciani, S. and Holm, S.},
+  journal={Frontiers in Signal Processing},
+  volume={3},
+  pages={1276748},
+  year={2024},
+  publisher={Frontiers Media SA}
+}
 ```
